@@ -11,7 +11,7 @@ const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
   const router = useRouter();
   return (
     <main
-      onClick={() => router.push(`/chat/${name}`)}
+      onClick={() => router.push(`/home/chat/${name}`)}
       className="flex gap-4 h-18 bg-amber-300 rounded-3xl relative p-4"
     >
       <figure>Icon</figure>

@@ -10,7 +10,7 @@ const FriendCard = ({ profilePic, name }: Props) => {
       <figure>Circle</figure>
       <article className="flex flex-col gap-3">
         <h5>Suyeon</h5>
-        <Link href={`/chat/${name}`}>Talk</Link>
+        <Link href={`/home/chat/${name}`}>Talk</Link>
       </article>
     </main>
   );
