@@ -1,29 +1,32 @@
-import ChatCard from "@/components/molecules/ChatCard";
-import FriendCard from "@/components/molecules/FriendCard";
-import Image from "next/image";
+import InputComponent from "@/components/atoms/InputComponent";
+import Link from "next/link";
 
-export default function Home() {
+const Login = () => {
   return (
-    <main className="h-screen">
-      <section className="flex flex-col h-full bg-cyan-400">
-        <section className="flex flex-col h-52  p-3">
-          <h1 className="text-4xl font-bold text-white mb-6 mt-6">
-            My Friends
-          </h1>
-          <section className="flex gap-5 pl-2 pb-3">
-            <FriendCard name="cesar" />
-          </section>
-        </section>
-        <section className="flex flex-col gap-8 flex-grow pt-6 px-2 rounded-t-3xl bg-white">
-          <hgroup>
-            <h5 className="text-lg text-emerald-500">Talk with talkie</h5>
-            <h1 className="text-4xl">Chat Room</h1>
-          </hgroup>
-          <ChatCard />
-        </section>
+    <main className="w-screen h-screen bg-red-700 flex flex-col items-center gap-8">
+      <hgroup className="pt-44 ">
+        <h1 className="text-3xl">Welcome Back</h1>
+        <h6 className="text-lg">Login to your account</h6>
+      </hgroup>
+      <section className="flex flex-col gap-4">
+        <InputComponent type="text" text="User Name" />
+        <InputComponent type="password" />
+        <article className="flex">
+          <label htmlFor="remember">Remember me </label>
+          <input id="remember" type="checkbox" />
+          <p>Forgot Password ?</p>
+        </article>
       </section>
-
-      <div className="absolute left-40 bottom-2">Menu</div>
+      <section className="w-3/5 bg-gray-700 flex flex-col items-center">
+        <button className="w-3/5 h-12 bg-green-600 text-white rounded-full">
+          Continue
+        </button>
+        <p>
+          Already have an account? <Link href={"/signUp"}>Sign Up</Link>
+        </p>
+      </section>
     </main>
   );
-}
+};
+
+export default Login;

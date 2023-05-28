@@ -1,3 +1,4 @@
+import { BiLeftArrowAlt } from "react-icons/bi";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 const ChatScreen = ({ params }: Params) => {
