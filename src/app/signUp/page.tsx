@@ -1,23 +1,73 @@
+"use client";
 import InputComponent from "@/components/atoms/InputComponent";
-
+import { useUserContext } from "@/context/store";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 const SignUp = () => {
+  const [initialForm, setInitialForm] = useState({
+    userName: "",
+    password: "",
+    email: "",
+  });
+  const { login, userState } = useUserContext();
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const target = e.currentTarget;
+    setInitialForm({
+      ...initialForm,
+      [e.currentTarget.name]: e.currentTarget.value,
+    });
+  };
+  const router = useRouter();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("se envio");
+    e.preventDefault();
+    login(initialForm);
+  };
+  useEffect(() => {
+    if (userState.loged === "authenticated") {
+      router.push("/home");
+    } else {
+      router.push("/");
+    }
+  }, [userState.loged, router]);
   return (
-    <main className="w-screen h-screen  flex flex-col items-center  pt-44">
+    <main className="w-screen h-screen bg-white  flex flex-col items-center pt-44 ">
       <hgroup className="flex flex-col items-center">
-        <h1>Register</h1>
-        <h5>Create your new account</h5>
+        <h1 className="text-sky-600">Register</h1>
+        <h5 className="text-sky-600">Create your new account</h5>
       </hgroup>
-      <section className="flex flex-col">
-        <InputComponent type="text" text="Username" />
-        <InputComponent type="text" text="Your Email" />
-        <InputComponent type="password" text="Your password" />
-      </section>
-      <section>
-        <button className="w-3/5 h-12 bg-green-600 text-white rounded-full">
-          Continue
-        </button>
-        <p>Or continue with</p>
-      </section>
+      <form onSubmit={handleSubmit}>
+        <section className="flex flex-col ">
+          <InputComponent
+            type="text"
+            text="Username"
+            name="userName"
+            onChange={handleChange}
+          />
+          <InputComponent
+            type="email"
+            text="Your Email"
+            onChange={handleChange}
+            name="email"
+          />
+          <InputComponent
+            type="password"
+            text="Your password"
+            onChange={handleChange}
+            name="password"
+          />
+        </section>
+        <section className="flex flex-col items-center pt-5 w-4/5 gap-5">
+          <button
+            type="submit"
+            className="w-3/5 h-12 text-white rounded-full bg-gradient-to-r from-blue-800 to-sky-500"
+          >
+            Continue
+          </button>
+          <p>Or continue with</p>
+        </section>
+      </form>
     </main>
   );
 };

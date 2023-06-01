@@ -1,10 +1,14 @@
+"use client";
 import { BiHomeAlt } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import ChatCard from "@/components/molecules/ChatCard";
 import FriendCard from "@/components/molecules/FriendCard";
 import Image from "next/image";
+import { useUserContext } from "@/context/store";
 
 export default function Home() {
+  const { userState } = useUserContext();
+
   return (
     <main className="h-screen">
       <section className="flex flex-col h-full bg-cyan-400">

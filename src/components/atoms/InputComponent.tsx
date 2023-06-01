@@ -1,29 +1,56 @@
+"use client";
 import { BsLockFill, BsFillPersonFill } from "react-icons/bs";
-import { AiFillEye } from "react-icons/ai";
+import { AiFillEye, AiFillEyeInvisible, AiTwotoneMail } from "react-icons/ai";
+
+import { useState } from "react";
 interface Props {
-  type: "text" | "password";
+  type: "text" | "password" | "email";
   text?: string;
   large?: boolean;
+  name?: string;
+  onChange?: (e) => void;
 }
 
-const InputComponent = ({ type, text, large }: Props) => {
+const InputComponent = ({ type, text, large, onChange, name }: Props) => {
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <section
       className={`relative w-${
         large ? "20" : ""
-      } bg-red-100 p-3 flex items-center rounded-full gap-4 mt-8`}
+      }  p-3 border-2 shadow-lg bg-white flex items-center rounded-full gap-4 mt-8 hover:border-sky-500`}
     >
-      {type === "password" ? <BsLockFill /> : <BsFillPersonFill />}
-
-      <input type={type} id={text} className="bg-transparent peer" />
-      {type === "password" && <AiFillEye />}
-      <label
-        className="absolute top-3 left-12 text-base text-black 
-        peer-focus:-top-7 transition-all duration-500 text-2xl text-green-500 "
-        htmlFor={text}
-      >
-        {text}
-      </label>
+      {type === "password" ? (
+        <BsLockFill />
+      ) : type === "email" ? (
+        <AiTwotoneMail />
+      ) : (
+        <BsFillPersonFill />
+      )}
+      {isVisible ? (
+        <input
+          type="text"
+          id={text}
+          className="bg-transparent "
+          placeholder={text}
+          name={name}
+          onChange={onChange}
+        />
+      ) : (
+        <input
+          type={type}
+          id={text}
+          className="bg-transparent "
+          placeholder={text}
+          name={name}
+          onChange={onChange}
+        />
+      )}
+      {type === "password" &&
+        (isVisible ? (
+          <AiFillEyeInvisible onClick={() => setIsVisible(!isVisible)} />
+        ) : (
+          <AiFillEye onClick={() => setIsVisible(!isVisible)} />
+        ))}
     </section>
   );
 };
