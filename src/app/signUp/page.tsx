@@ -1,22 +1,19 @@
 "use client";
 import InputComponent from "@/components/atoms/InputComponent";
 import { useUserContext } from "@/context/store";
+import useForm from "@/hooks/useForm";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
+const initialForm = {
+  userName: "",
+  password: "",
+  email: "",
+};
 const SignUp = () => {
-  const [initialForm, setInitialForm] = useState({
-    userName: "",
-    password: "",
-    email: "",
-  });
+  const { handleChange } = useForm(initialForm);
   const { signUp, userState } = useUserContext();
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setInitialForm({
-      ...initialForm,
-      [e.currentTarget.name]: e.currentTarget.value,
-    });
-  };
+
   const router = useRouter();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log("se envio");

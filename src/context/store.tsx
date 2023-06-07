@@ -19,7 +19,7 @@ export interface IUserState {
 const initialState: IUserState = {
   userName: "",
   loged: "not-authenticated",
-  id: "adadad",
+  id: "",
   friends: [],
 };
 
@@ -43,7 +43,7 @@ interface UserContextProps {
   login: (form: ISignUp) => void;
   signUp: (form: ILogin) => void;
   addFriend: (friend: IFriend) => void;
-  getFriends: (id: string) => void;
+  getFriends: () => void;
   searchingUsers: (query: string) => void;
 }
 
@@ -59,21 +59,22 @@ export const UserProvider = ({ children }: any) => {
     console.log(data);
     dispatch({
       type: "SIGN_UP",
-      payload: data.newUser.userName,
+      payload: { username: data.newUser.userName, id: data.newUser._id },
     });
   };
 
   const login = async (form: ILogin) => {
     const { data } = await axios.post("http://localhost:8000/api/auth", form);
+    console.log(data.user);
     dispatch({
       type: "LOGIN",
-      payload: data,
+      payload: { username: data.user.userName, id: data.user._id },
     });
   };
 
   const addFriend = async (friend: IFriend) => {
     const { data } = await axios.post(
-      `http://localhost:8000/api/users/friends/:${userState}`,
+      `http://localhost:8000/api/users/friends/${userState}`,
       friend
     );
     dispatch({
@@ -81,9 +82,9 @@ export const UserProvider = ({ children }: any) => {
     });
   };
 
-  const getFriends = async (id: string) => {
+  const getFriends = async () => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/users/friends/:${id}`
+      `http://localhost:8000/api/users/friends/${initialState.id}`
     );
     dispatch({
       type: "GET_FRIENDS",

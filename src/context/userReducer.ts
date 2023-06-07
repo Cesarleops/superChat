@@ -13,14 +13,17 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
             console.log(action.payload)
             return {
                 ...state,
-                userName: action.payload,
-                loged: 'authenticated'
+                userName: action.payload.username,
+                loged: 'authenticated',
+                id: action.payload.id
             }
         case 'LOGIN': {
+            console.log(action.payload)
             return {
                 ...state,
-                userName: action.payload,
-                loged: 'authenticated'
+                userName: action.payload.username,
+                loged: 'authenticated',
+                id: action.payload.id
             }
         }
         case 'GET_FRIENDS':{

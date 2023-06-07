@@ -1,18 +1,22 @@
 "use client";
 import { AiOutlineSearch } from "react-icons/ai";
-import axios from "axios";
+import { useSearch } from "@/hooks/useSearch";
 
 export const SearchModal = () => {
-  const handleSearch = async (e: string) => {
-    const data = await axios.get(`http:localhost:8000/api/friends/?name=${e}`);
-  };
+  const { data, handleChange, input } = useSearch();
   return (
     <main>
       <section>
-        <input type="text" />
+        <input type="text" onChange={handleChange} value={input} />
         <AiOutlineSearch />
       </section>
-      <section></section>
+      <section>
+        <ul>
+          {data.map((el) => (
+            <li key={el._id}>{el.userName}</li>
+          ))}
+        </ul>
+      </section>
     </main>
   );
 };
