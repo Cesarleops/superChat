@@ -4,10 +4,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export const useFriends = () => {
-    const {userState}= useUserContext()
     const [data, setData] = useState([])
+    const id = localStorage.getItem('iden')
+    console.log(id)
     const fetchFriends = async() => {
-        const {data} = await axios.get(`http://localhost:8000/api/users/friends/${userState.id}`)
+        const {data} = await axios.get(`http://localhost:8000/api/users/friends/${id}`)
         setData(data)
     };
     useEffect(()=>{

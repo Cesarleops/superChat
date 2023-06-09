@@ -1,15 +1,19 @@
+"use client";
 import ChatCard from "@/components/molecules/ChatCard";
 import ToogleSwitch from "@/components/molecules/ToogleSwitch";
 import { FriendList } from "@/components/molecules/FriendList";
-import { SearchModal } from "@/components/molecules/SearchModal";
+import { useState } from "react";
+import { UserMenu } from "@/components/molecules/UserMenu";
 
 export default function Home() {
+  const [userMenu, setUserMenu] = useState(false);
+  console.log(userMenu);
   return (
     <main className="h-screen">
-      <SearchModal />
+      <UserMenu active={userMenu} />
       <section className="flex flex-col h-full bg-cyan-400">
         <section className="flex flex-col h-52  p-3">
-          <h1 className="text-4xl font-bold text-white mb-6 mt-6">
+          <h1 className="text-4xl font-bold text-white mb-6 mt-6 z-40">
             My Friends
           </h1>
           <FriendList />
@@ -23,7 +27,7 @@ export default function Home() {
         </section>
       </section>
       <section className="absolute h-14 w-48 bg-black flex flex-col items-center justify-center  translate-x-2/4  bottom-6 rounded-3xl">
-        <ToogleSwitch />
+        <ToogleSwitch setUserMenu={setUserMenu} menuState={userMenu} />
       </section>
     </main>
   );

@@ -11,14 +11,14 @@ const initialForm = {
   email: "",
 };
 const SignUp = () => {
-  const { handleChange } = useForm(initialForm);
+  const { handleChange, form } = useForm(initialForm);
   const { signUp, userState } = useUserContext();
 
   const router = useRouter();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log("se envio");
     e.preventDefault();
-    signUp(initialForm);
+    signUp(form);
   };
   useEffect(() => {
     if (userState.loged === "authenticated") {

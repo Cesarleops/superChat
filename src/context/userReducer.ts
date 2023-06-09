@@ -5,7 +5,8 @@ type Action = |
  {type: "LOGIN", payload: any} |
  {type: "GET_FRIENDS", payload: any} | 
  {type: "ADD_FRIEND"} |
- {type: "SEARCH"}
+ {type: "SEARCH"} |
+ {type: 'TOGGLE'}
 
 export const userReducer = (state: IUserState, action: Action): IUserState => {
     switch(action.type){
@@ -32,9 +33,7 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
                 friends: [...state.friends, action.payload]
             }
         }
-        case 'SEARCH':{
-
-        }
+       
         default: 
             return state
     }

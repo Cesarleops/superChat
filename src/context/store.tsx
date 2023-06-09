@@ -1,11 +1,5 @@
 "use client";
-import {
-  createContext,
-  useReducer,
-  SetStateAction,
-  Dispatch,
-  useContext,
-} from "react";
+import { createContext, useReducer, useContext } from "react";
 import { userReducer } from "./userReducer";
 import axios from "axios";
 
@@ -54,9 +48,8 @@ export const UserProvider = ({ children }: any) => {
   const [userState, dispatch] = useReducer(userReducer, initialState);
 
   const signUp = async (form: ILogin) => {
-    console.log("llego", form);
     const { data } = await axios.post("http://localhost:8000/api/users", form);
-    console.log(data);
+    localStorage.setItem("iden", data.newUser._id);
     dispatch({
       type: "SIGN_UP",
       payload: { username: data.newUser.userName, id: data.newUser._id },
@@ -65,6 +58,7 @@ export const UserProvider = ({ children }: any) => {
 
   const login = async (form: ILogin) => {
     const { data } = await axios.post("http://localhost:8000/api/auth", form);
+    localStorage.setItem("iden", data.user._id);
     console.log(data.user);
     dispatch({
       type: "LOGIN",
