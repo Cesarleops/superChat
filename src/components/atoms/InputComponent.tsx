@@ -8,29 +8,38 @@ interface Props {
   text?: string;
   large?: boolean;
   name?: string;
-  onChange?: (e) => void;
+  onChange?: (e: any) => void;
 }
 
 const InputComponent = ({ type, text, large, onChange, name }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
+
+  const Icon = () => {
+    if (type === "password") {
+      return <BsLockFill />;
+    } else if (type === "email") {
+      return <AiTwotoneMail />;
+    } else {
+      return <BsFillPersonFill />;
+    }
+  };
+
+  const handleVisibilityToggle = () => {
+    setIsVisible(!isVisible);
+  };
+
   return (
     <section
       className={`relative w-${
         large ? "20" : ""
-      }  p-3 border-2 shadow-lg bg-white flex items-center rounded-full gap-4 mt-8 hover:border-sky-500`}
+      } p-3 border-2 shadow-lg bg-white flex items-center rounded-full gap-4 mt-8 hover:border-sky-500`}
     >
-      {type === "password" ? (
-        <BsLockFill />
-      ) : type === "email" ? (
-        <AiTwotoneMail />
-      ) : (
-        <BsFillPersonFill />
-      )}
+      <Icon />
       {isVisible ? (
         <input
           type="text"
           id={text}
-          className="bg-transparent "
+          className="bg-transparent"
           placeholder={text}
           name={name}
           onChange={onChange}
@@ -39,7 +48,7 @@ const InputComponent = ({ type, text, large, onChange, name }: Props) => {
         <input
           type={type}
           id={text}
-          className="bg-transparent "
+          className="bg-transparent"
           placeholder={text}
           name={name}
           onChange={onChange}
@@ -47,9 +56,9 @@ const InputComponent = ({ type, text, large, onChange, name }: Props) => {
       )}
       {type === "password" &&
         (isVisible ? (
-          <AiFillEyeInvisible onClick={() => setIsVisible(!isVisible)} />
+          <AiFillEyeInvisible onClick={handleVisibilityToggle} />
         ) : (
-          <AiFillEye onClick={() => setIsVisible(!isVisible)} />
+          <AiFillEye onClick={handleVisibilityToggle} />
         ))}
     </section>
   );

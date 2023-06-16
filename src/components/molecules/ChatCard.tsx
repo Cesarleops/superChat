@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface Props {
   profilePic?: string;
@@ -9,6 +10,9 @@ interface Props {
 }
 const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
   const router = useRouter();
+  useEffect(() => {
+    console.log("se monta la chat card");
+  }, []);
   return (
     <main
       onClick={() => router.push(`/home/chat/${name}`)}
@@ -16,10 +20,10 @@ const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
     >
       <figure>Icon</figure>
       <article className="flex flex-col gap-2">
-        <p>Name</p>
-        <p>Last message</p>
+        <p>{name}</p>
+        <p>{message}</p>
       </article>
-      <aside className="absolute top-3 right-5">+10</aside>
+      <aside className="absolute top-3 right-5">{notifications}</aside>
     </main>
   );
 };
