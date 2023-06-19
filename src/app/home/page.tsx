@@ -1,14 +1,22 @@
+"use client";
 import ChatCard from "@/components/molecules/ChatCard";
 import ToogleSwitch from "@/components/molecules/ToogleSwitch";
 import { FriendsSection } from "@/components/molecules/FriendSection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserMenu } from "@/components/molecules/UserMenu";
 import { useUserContext } from "@/context/store";
 import { ChatsSection } from "@/components/molecules/ChatsSection";
+import { io } from "socket.io-client";
 
+export const socket = io("http://localhost:8000");
 export default function Home() {
   // const [userMenu, setUserMenu] = useState(false);
-  // const { userState } = useUserContext();
+  const { userState } = useUserContext();
+  useEffect(() => {
+    socket.emit("loged", {
+      sendedBy: userState.id,
+    });
+  }, [userState.id]);
 
   return (
     <main className="h-screen">

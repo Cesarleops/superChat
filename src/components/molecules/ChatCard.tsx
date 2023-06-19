@@ -1,6 +1,8 @@
 "use client";
+
+import { socket } from "@/app/home/page";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   profilePic?: string;
@@ -10,9 +12,17 @@ interface Props {
 }
 const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
   const router = useRouter();
+  const [newNotifications, setNewNotifications] = useState(notifications);
+
   useEffect(() => {
-    console.log("se monta la chat card");
+    const handleNewNotification = () => {
+      setNewNotifications((prevNotifications) => prevNotifications + 1);
+      socket.off("newNotification", handleNewNotification);
+    };
+
+    socket.on("newNotification", handleNewNotification);
   }, []);
+
   return (
     <main
       onClick={() => router.push(`/home/chat/${name}`)}
@@ -23,7 +33,7 @@ const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
         <p>{name}</p>
         <p>{message}</p>
       </article>
-      <aside className="absolute top-3 right-5">{notifications}</aside>
+      <aside className="absolute top-3 right-5">{newNotifications}</aside>
     </main>
   );
 };

@@ -25,7 +25,7 @@ export const ChatsSection = () => {
               key={Math.random()}
               name={chat.members}
               message={chat.messages.message}
-              notifications={chat.unreadMessages}
+              notifications={chat.unreadMessages.amount}
             />
           ))
         ) : (
