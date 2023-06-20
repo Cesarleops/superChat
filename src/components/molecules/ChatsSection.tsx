@@ -11,9 +11,12 @@ export const ChatsSection = () => {
       `http://localhost:8000/api/users/conversation/${userState.id}`
     );
     const chats2 = await chats.json();
+    console.log("fetcheo");
+    console.log(chats2);
     setChats(chats2);
   };
   useEffect(() => {
+    console.log("se monto");
     getChats();
   }, []);
   return (
@@ -24,7 +27,7 @@ export const ChatsSection = () => {
             <ChatCard
               key={Math.random()}
               name={chat.members}
-              message={chat.messages.message}
+              message={chat.messages}
               notifications={chat.unreadMessages.amount}
             />
           ))

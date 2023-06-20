@@ -21,11 +21,11 @@ const Login = () => {
   const router = useRouter();
   useEffect(() => {
     if (userState.loged === "authenticated") {
-      router.push("/home");
+      router.push(`/home/${userState.userName}`);
     } else {
       router.push("/");
     }
-  }, [userState.loged, router]);
+  }, [userState.loged, router, userState.userName]);
   return (
     <main className="w-screen h-screen bg-white flex flex-col items-center gap-8">
       <hgroup className="pt-44 flex flex-col items-center ">

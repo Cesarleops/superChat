@@ -1,19 +1,17 @@
 "use client";
+import { useUserContext } from "@/context/store";
 import { BiHomeAlt } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 
-interface Props {
-  setUserMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  menuState: boolean;
-}
-const ToogleSwitch = ({ setUserMenu, menuState }: Props) => {
+const ToogleSwitch = () => {
+  const { setMenu } = useUserContext();
   return (
     <label
       htmlFor="toggle"
       className="bg-black relative w-4/5 h-4/5 rounded-full cursor-pointer"
     >
       <input
-        onClick={() => setUserMenu(!menuState)}
+        onClick={() => setMenu()}
         type="checkbox"
         id="toggle"
         className="sr-only peer"

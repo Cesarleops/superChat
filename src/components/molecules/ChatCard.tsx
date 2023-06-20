@@ -1,6 +1,6 @@
 "use client";
 
-import { socket } from "@/app/home/page";
+import { useUserContext } from "@/context/store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -8,20 +8,30 @@ interface Props {
   profilePic?: string;
   name?: string;
   message?: string;
-  notifications?: string;
+  notifications?: number;
 }
 const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
   const router = useRouter();
-  const [newNotifications, setNewNotifications] = useState(notifications);
+  const [newNotifications, setNewNotifications] = useState(notifications || 0);
+  const { socket, userState } = useUserContext();
 
   useEffect(() => {
     const handleNewNotification = () => {
-      setNewNotifications((prevNotifications) => prevNotifications + 1);
-      socket.off("newNotification", handleNewNotification);
+      if (
+        !userState.isActiveChat &&
+        userState.activeChatId !== message.sendedBy
+      ) {
+        setNewNotifications((prevNotifications) => prevNotifications + 1);
+        socket?.off("newNotification", handleNewNotification);
+      }
     };
 
-    socket.on("newNotification", handleNewNotification);
-  }, []);
+    socket?.on("newNotification", handleNewNotification);
+
+    return () => {
+      setNewNotifications(0);
+    };
+  }, [socket]);
 
   return (
     <main
@@ -31,7 +41,7 @@ const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
       <figure>Icon</figure>
       <article className="flex flex-col gap-2">
         <p>{name}</p>
-        <p>{message}</p>
+        <p>{message.message}</p>
       </article>
       <aside className="absolute top-3 right-5">{newNotifications}</aside>
     </main>

@@ -3,18 +3,14 @@ import { useUserContext } from "@/context/store";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
 import { ChatFooter } from "./ChatFooter";
 
-interface Props {
-  socket: Socket;
-}
-
-export const ChatBody = ({ socket }: Props) => {
+export const ChatBody = () => {
   const params = useParams();
-  const { userState } = useUserContext();
+  const { userState, socket, setActiveChat, setActiveChatId } =
+    useUserContext();
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessages] = useState("");
+  const [newMessage, setNewMessage] = useState("");
   const [incomingMessage, setIncomingMessage] = useState(null);
 
   const SEND_MESSAGE_EVENT = "sendingMessage";
@@ -23,7 +19,7 @@ export const ChatBody = ({ socket }: Props) => {
 
   const handleNewMessage = async (message: any) => {
     try {
-      socket.emit(SEND_MESSAGE_EVENT, {
+      socket?.emit(SEND_MESSAGE_EVENT, {
         sendedBy: userState.id,
         recievedBy: params.id,
         message,
@@ -60,10 +56,26 @@ export const ChatBody = ({ socket }: Props) => {
   }, [userState.id, params.id]);
 
   useEffect(() => {
-    socket.emit(CLEAN_EVENT, {
+    setActiveChat(true);
+    setActiveChatId(params.id);
+
+    return () => {
+      setActiveChat(false);
+      setActiveChatId("");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket?.emit(CLEAN_EVENT, {
       sendedBy: userState.id,
       recievedBy: params.id,
     });
+    return () => {
+      socket?.emit(CLEAN_EVENT, {
+        sendedBy: userState.id,
+        recievedBy: params.id,
+      });
+    };
   }, [userState.id, params.id, socket]);
 
   useEffect(() => {
@@ -81,10 +93,10 @@ export const ChatBody = ({ socket }: Props) => {
       });
     };
 
-    socket.on(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
+    socket?.on(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
 
     return () => {
-      socket.off(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
+      socket?.off(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
     };
   }, [socket]);
 
@@ -107,7 +119,7 @@ export const ChatBody = ({ socket }: Props) => {
       <ChatFooter
         newMessage={newMessage}
         handleNewMessage={handleNewMessage}
-        setNewMessage={setNewMessages}
+        setNewMessage={setNewMessage}
       />
     </section>
   );

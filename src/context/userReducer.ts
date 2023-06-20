@@ -1,12 +1,13 @@
-import { IUserState } from "./store"
+import {IUserState} from '../interfaces'
 
 type Action = |
  {type: "SIGN_UP", payload: any} |
  {type: "LOGIN", payload: any} |
- {type: "GET_FRIENDS", payload: any} | 
- {type: "ADD_FRIEND"} |
- {type: "SEARCH"} |
- {type: 'TOGGLE'}
+ {type: 'ACTIVATE_CHAT', payload:boolean} |
+ {type: 'SET_CHAT', payload:string} |
+ {type: 'TOGGLE'} 
+
+
 
 export const userReducer = (state: IUserState, action: Action): IUserState => {
     switch(action.type){
@@ -27,13 +28,26 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
                 id: action.payload.id
             }
         }
-        case 'GET_FRIENDS':{
-            return{
+        
+        case 'TOGGLE': {
+            return {
                 ...state,
-                friends: [...state.friends, action.payload]
+                userMenu: !state.userMenu
             }
         }
-       
+       case 'ACTIVATE_CHAT': {
+        return {
+            ...state, 
+            isActiveChat: action.payload
+        }
+       }
+       case 'SET_CHAT':{
+        return {
+            ...state,
+            activeChatId: action.payload
+        }
+       }
+      
         default: 
             return state
     }

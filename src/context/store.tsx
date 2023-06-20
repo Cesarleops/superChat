@@ -1,44 +1,34 @@
 "use client";
-import { createContext, useReducer, useContext } from "react";
+import {
+  createContext,
+  useReducer,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { Socket } from "socket.io-client";
 import { userReducer } from "./userReducer";
 import axios from "axios";
-
-export interface IUserState {
-  userName: string;
-  id: string;
-  loged: string;
-  friends: IFriend[];
-}
+import { io } from "socket.io-client";
+import { ISignUp, ILogin, IUserState } from "@/interfaces";
 
 const initialState: IUserState = {
   userName: "",
   loged: "not-authenticated",
   id: "",
-  friends: [],
+  userMenu: false,
+  isActiveChat: false,
+  activeChatId: "",
 };
-
-interface ILogin {
-  userName: string;
-  email: string;
-}
-interface ISignUp {
-  userName: string;
-  email: string;
-  password: string;
-}
-
-interface IFriend {
-  name: string;
-  profilePic?: string;
-}
 
 interface UserContextProps {
   userState: IUserState;
   login: (form: ISignUp) => void;
   signUp: (form: ILogin) => void;
-  addFriend: (friend: IFriend) => void;
-  getFriends: () => void;
-  searchingUsers: (query: string) => void;
+  setMenu: () => void;
+  setActiveChat: (value: boolean) => void;
+  setActiveChatId: (name: string) => void;
+  socket: Socket | null;
 }
 
 export const UserContext = createContext<UserContextProps>(
@@ -46,7 +36,15 @@ export const UserContext = createContext<UserContextProps>(
 );
 export const UserProvider = ({ children }: any) => {
   const [userState, dispatch] = useReducer(userReducer, initialState);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
+  useEffect(() => {
+    const socket = io("http://localhost:8000");
+    setSocket(socket);
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   const signUp = async (form: ILogin) => {
     const { data } = await axios.post("http://localhost:8000/api/users", form);
     localStorage.setItem("iden", data.newUser._id);
@@ -59,48 +57,42 @@ export const UserProvider = ({ children }: any) => {
   const login = async (form: ILogin) => {
     const { data } = await axios.post("http://localhost:8000/api/auth", form);
     localStorage.setItem("iden", data.user._id);
-    console.log(data.user);
     dispatch({
       type: "LOGIN",
       payload: { username: data.user.userName, id: data.user._id },
     });
   };
 
-  const addFriend = async (friend: IFriend) => {
-    const { data } = await axios.post(
-      `http://localhost:8000/api/users/friends/${userState}`,
-      friend
-    );
+  const setMenu = () => {
     dispatch({
-      type: "ADD_FRIEND",
+      type: "TOGGLE",
     });
   };
 
-  const getFriends = async () => {
-    const { data } = await axios.get(
-      `http://localhost:8000/api/users/friends/${initialState.id}`
-    );
+  const setActiveChatId = (payload: string) => {
     dispatch({
-      type: "GET_FRIENDS",
-      payload: data,
+      type: "SET_CHAT",
+      payload,
     });
   };
 
-  const searchingUsers = async (query: string) => {
-    const { data } = await axios.post("http://localhost:8000/api/users");
+  const setActiveChat = (payload: boolean) => {
     dispatch({
-      type: "SEARCH",
+      type: "ACTIVATE_CHAT",
+      payload,
     });
   };
+
   return (
     <UserContext.Provider
       value={{
         userState,
         login,
-        addFriend,
         signUp,
-        searchingUsers,
-        getFriends,
+        socket,
+        setMenu,
+        setActiveChat,
+        setActiveChatId,
       }}
     >
       {children}
