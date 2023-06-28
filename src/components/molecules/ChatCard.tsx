@@ -36,7 +36,7 @@ const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
   return (
     <main
       onClick={() => router.push(`/home/chat/${name}`)}
-      className="flex gap-4 h-18 bg-amber-300 rounded-3xl relative p-4"
+      className="flex gap-4 h-18 bg-terciary rounded-3xl relative p-4"
     >
       <figure>Icon</figure>
       <article className="flex flex-col gap-2">

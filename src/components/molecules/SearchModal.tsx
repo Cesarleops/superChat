@@ -4,15 +4,22 @@ import { useSearch } from "@/hooks/useSearch";
 import axios from "axios";
 import { useUserContext } from "@/context/store";
 
+type IUser = {
+  _id: string;
+  userName: string;
+};
 interface Props {
   onClick: () => void;
 }
 export const SearchModal = ({ onClick }: Props) => {
   const { data, handleChange, input } = useSearch();
   const { userState } = useUserContext();
-  const addFriend = async (id, username) => {
+  const userId = localStorage.getItem("iden");
+  const addFriend = async (id: string, username: string) => {
     await axios.post(
-      `http://localhost:8000/api/users/friends/${userState.id}`,
+      `http://localhost:8000/api/users/friends/${
+        userState.id ? userState.id : userId
+      }`,
       {
         friends: {
           id: id,
@@ -30,19 +37,19 @@ export const SearchModal = ({ onClick }: Props) => {
           onChange={handleChange}
           value={input}
           placeholder="Search a friend"
-          className="rounded-full border-2 border-sky-700 p-2"
+          className="rounded-full border-2 border-terciary p-2"
         />
       </section>
       <section className="px-4">
         <article className="flex flex-col gap-2">
-          {data.map((el) => (
-            <article className="flex" key={el._id}>
-              <p>{el.userName}</p>
+          {data.map((el: IUser) => (
+            <article className="flex items-center gap-10" key={el._id}>
+              <p className="text-2xl">{el.userName}</p>
               <small
-                className="bg-red-500"
+                className="bg-terciary text-base text-center p-3 rounded-xl"
                 onClick={() => addFriend(el._id, el.userName)}
               >
-                Add Friend
+                Connect!
               </small>
             </article>
           ))}

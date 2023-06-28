@@ -5,7 +5,8 @@ type Action = |
  {type: "LOGIN", payload: any} |
  {type: 'ACTIVATE_CHAT', payload:boolean} |
  {type: 'SET_CHAT', payload:string} |
- {type: 'TOGGLE'} 
+ {type: 'TOGGLE'} |
+ {type: 'LOGOUT'} 
 
 
 
@@ -45,6 +46,15 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
         return {
             ...state,
             activeChatId: action.payload
+        }
+       }
+       case 'LOGOUT': {
+        return {
+            ...state,
+            userName: '',
+            loged: 'not-authenticated',
+            id:'',
+            userMenu: false
         }
        }
       

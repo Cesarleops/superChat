@@ -3,9 +3,7 @@ export interface ILogin {
     userName: string;
     email: string;
   }
-  export interface ISignUp {
-    userName: string;
-    email: string;
+  export interface ISignUp extends ILogin{
     password: string;
   }
   

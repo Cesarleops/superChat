@@ -6,12 +6,12 @@ interface Props {
   profilePic?: string;
   name?: string;
   id?: string;
-  params: Params;
+  params?: Params;
 }
 const FriendCard = ({ profilePic, name, id, params }: Props) => {
   const { userState } = useUserContext();
   return (
-    <main className="flex gap-2 w-32 h-20 bg-emerald-500 rounded-3xl relative p-2">
+    <main className="flex gap-2 w-32 h-20 bg-terciary rounded-3xl relative p-2">
       <figure>Circle</figure>
       <article className="flex flex-col gap-3">
         <h5>{name}</h5>

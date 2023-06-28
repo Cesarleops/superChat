@@ -2,6 +2,7 @@
 import InputComponent from "@/components/atoms/InputComponent";
 import { useUserContext } from "@/context/store";
 import useForm from "@/hooks/useForm";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -30,8 +31,8 @@ const SignUp = () => {
   return (
     <main className="w-screen h-screen bg-white  flex flex-col items-center pt-44 ">
       <hgroup className="flex flex-col items-center">
-        <h1 className="text-sky-600">Register</h1>
-        <h5 className="text-sky-600">Create your new account</h5>
+        <h1 className="text-terciary text-3xl">Register</h1>
+        <h5 className="text-terciary text-lg">Create your new account</h5>
       </hgroup>
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <section className="flex flex-col ">
@@ -57,11 +58,11 @@ const SignUp = () => {
         <section className="flex flex-col items-center  pt-5  w-4/5 gap-5">
           <button
             type="submit"
-            className="w-4/5 h-12 text-white rounded-full bg-gradient-to-r from-blue-800 to-sky-500"
+            className="w-4/5 h-12 text-white rounded-full bg-gradient-to-r from-primary to-terciary"
           >
             Continue
           </button>
-          <p>Or continue with</p>
+          <Link href={"/"}>Already have an account ? Log in</Link>
         </section>
       </form>
     </main>

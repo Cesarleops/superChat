@@ -29,6 +29,7 @@ interface UserContextProps {
   setActiveChat: (value: boolean) => void;
   setActiveChatId: (name: string) => void;
   socket: Socket | null;
+  logout(): void;
 }
 
 export const UserContext = createContext<UserContextProps>(
@@ -83,6 +84,13 @@ export const UserProvider = ({ children }: any) => {
     });
   };
 
+  const logout = () => {
+    localStorage.clear();
+    dispatch({
+      type: "LOGOUT",
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -93,6 +101,7 @@ export const UserProvider = ({ children }: any) => {
         setMenu,
         setActiveChat,
         setActiveChatId,
+        logout,
       }}
     >
       {children}

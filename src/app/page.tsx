@@ -29,8 +29,8 @@ const Login = () => {
   return (
     <main className="w-screen h-screen bg-white flex flex-col items-center gap-8">
       <hgroup className="pt-44 flex flex-col items-center ">
-        <h1 className="text-3xl text-sky-600">Welcome Back</h1>
-        <h6 className="text-lg text-sky-600">Login to your account</h6>
+        <h1 className="text-3xl text-terciary">Welcome Back</h1>
+        <h6 className="text-lg text-terciary">Login to your account</h6>
       </hgroup>
 
       <section className="flex flex-col gap-4">
@@ -59,7 +59,7 @@ const Login = () => {
       </section>
       <section className="w-3/5  flex flex-col items-center">
         <button
-          className="w-3/5 h-12 bg-gradient-to-r from-blue-800 to-sky-500 text-white rounded-full"
+          className="w-3/5 h-12 bg-gradient-to-r from-primary to-terciary text-white rounded-full"
           onClick={handleSubmit}
         >
           Continue

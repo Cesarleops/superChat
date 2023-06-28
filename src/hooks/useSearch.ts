@@ -11,7 +11,7 @@ export const useSearch = () => {
   }
   const fetchUsers = async () => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/users?name=${input}`
+      `http://localhost:8000/api/users?name=${input}&id=${userState.id}`
     );
     console.log(data)
     const newData = data.filter(u => u.userName !== userState.userName)

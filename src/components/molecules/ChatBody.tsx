@@ -2,120 +2,49 @@
 import { useUserContext } from "@/context/store";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChatFooter } from "./ChatFooter";
+import { useChat } from "@/hooks/useChat";
 
 export const ChatBody = () => {
   const params = useParams();
-  const { userState, socket, setActiveChat, setActiveChatId } =
-    useUserContext();
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [incomingMessage, setIncomingMessage] = useState(null);
 
-  const SEND_MESSAGE_EVENT = "sendingMessage";
-  const CLEAN_EVENT = "clean";
-  const INCOMING_MESSAGE_EVENT = "incomingMessage";
+  const { messages, handleNewMessage, setNewMessage, newMessage } =
+    useChat(params);
+  const chatBodyRef = useRef<HTMLDivElement | null>(null);
 
-  const handleNewMessage = async (message: any) => {
-    try {
-      socket?.emit(SEND_MESSAGE_EVENT, {
-        sendedBy: userState.id,
-        recievedBy: params.id,
-        message,
-      });
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { ownMessage: true, message },
-      ]);
-
-      await axios.post("http://localhost:8000/api/users/conversation", {
-        sendedBy: userState.id,
-        recievedBy: params.id,
-        message,
-      });
-    } catch (error) {
-      console.log("Something went wrong:", error);
-    }
+  const scrollToBottom = () => {
+    chatBodyRef.current?.scrollTo(0, chatBodyRef.current.scrollHeight);
   };
 
-  useEffect(() => {
-    const initialConversation = async () => {
-      try {
-        const { data } = await axios.get(
-          `http://localhost:8000/api/users/conversation?memberId1=${userState.id}&memberId2=${params.id}`
-        );
-        setMessages(data);
-      } catch (error) {
-        console.log("Something went wrong:", error);
-      }
-    };
-
-    initialConversation();
-  }, [userState.id, params.id]);
+  console.log(messages);
 
   useEffect(() => {
-    setActiveChat(true);
-    setActiveChatId(params.id);
-
-    return () => {
-      setActiveChat(false);
-      setActiveChatId("");
-    };
-  }, []);
-
-  useEffect(() => {
-    socket?.emit(CLEAN_EVENT, {
-      sendedBy: userState.id,
-      recievedBy: params.id,
-    });
-    return () => {
-      socket?.emit(CLEAN_EVENT, {
-        sendedBy: userState.id,
-        recievedBy: params.id,
-      });
-    };
-  }, [userState.id, params.id, socket]);
-
-  useEffect(() => {
-    if (incomingMessage) {
-      setMessages((prevMessages) => [...prevMessages, incomingMessage]);
-    }
-  }, [incomingMessage]);
-
-  useEffect(() => {
-    const handleIncomingMessage = (data) => {
-      console.log(data);
-      setIncomingMessage({
-        ownMessage: false,
-        message: data,
-      });
-    };
-
-    socket?.on(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
-
-    return () => {
-      socket?.off(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
-    };
-  }, [socket]);
-
+    scrollToBottom();
+  }, [messages]);
   return (
-    <section className="h-5/6 space-y-2 p-3 flex flex-col overflow-y-scroll">
-      {messages.length > 0 ? (
-        messages.map((m) => (
-          <div
-            className={`bg-red-500 w-fit h-auto p-2 rounded-md ${
-              m.ownMessage ? "self-start" : "self-end"
-            }`}
-            key={Math.random()}
-          >
-            <p>{m.message}</p>
-          </div>
-        ))
-      ) : (
-        <div>Hablen putitos</div>
-      )}
+    <section
+      ref={chatBodyRef}
+      className="flex-1 flex flex-col overflow-y-scroll"
+    >
+      <div className="p-3 mb-20 flex flex-col flex-1 gap-3">
+        {messages.length > 0 ? (
+          messages.map((m) => (
+            <div
+              className={` w-fit h-auto p-2 rounded-md ${
+                m.ownMessage
+                  ? "self-start bg-primary text-secondary"
+                  : "self-end bg-terciary"
+              }`}
+              key={Math.random()}
+            >
+              <p>{m.message}</p>
+            </div>
+          ))
+        ) : (
+          <div>Hablen putitos</div>
+        )}
+      </div>
       <ChatFooter
         newMessage={newMessage}
         handleNewMessage={handleNewMessage}
