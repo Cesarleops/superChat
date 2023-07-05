@@ -13,7 +13,7 @@ type Action = |
 export const userReducer = (state: IUserState, action: Action): IUserState => {
     switch(action.type){
         case 'SIGN_UP':
-            console.log(action.payload)
+            
             return {
                 ...state,
                 userName: action.payload.username,
@@ -21,7 +21,7 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
                 id: action.payload.id
             }
         case 'LOGIN': {
-            console.log(action.payload)
+
             return {
                 ...state,
                 userName: action.payload.username,

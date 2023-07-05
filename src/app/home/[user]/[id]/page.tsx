@@ -1,9 +1,10 @@
 import { ChatBody } from "@/components/molecules/ChatBody";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
-const ChatScreen = () => {
+const ChatScreen = ({ params }: Params) => {
   return (
     <main className="flex flex-col h-full">
-      <ChatBody />
+      <ChatBody params={params} />
     </main>
   );
 };

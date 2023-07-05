@@ -6,44 +6,72 @@ import { useEffect, useState } from "react";
 
 interface Props {
   profilePic?: string;
-  name?: string;
-  message?: string;
+  name: string;
+  message: {
+    sendedBy: string;
+    recievedBy: string;
+    message: string;
+  };
   notifications?: number;
+  currentUser: string;
 }
-const ChatCard = ({ profilePic, name, message, notifications }: Props) => {
+const ChatCard = ({
+  profilePic,
+  name,
+  message,
+  notifications,
+  currentUser,
+}: Props) => {
   const router = useRouter();
   const [newNotifications, setNewNotifications] = useState(notifications || 0);
+  // const [lastMessage, setLastMessage] = useState(message.message);
   const { socket, userState } = useUserContext();
 
+  const direction =
+    currentUser !== message.sendedBy ? message.sendedBy : message.recievedBy;
   useEffect(() => {
-    const handleNewNotification = () => {
-      if (
-        !userState.isActiveChat &&
-        userState.activeChatId !== message.sendedBy
-      ) {
-        setNewNotifications((prevNotifications) => prevNotifications + 1);
-        socket?.off("newNotification", handleNewNotification);
+    const handleNotis = (data: string) => {
+      if (userState.activeChatId !== message.sendedBy) {
+        if (data === message.sendedBy || data === message.recievedBy) {
+          setNewNotifications((prev) => prev + 1);
+        }
       }
     };
-
-    socket?.on("newNotification", handleNewNotification);
+    socket?.on("newNotification", handleNotis);
 
     return () => {
-      setNewNotifications(0);
+      socket?.off("newNotification", handleNotis);
+      if (
+        userState.activeChatId === message.recievedBy ||
+        userState.activeChatId === message.sendedBy
+      ) {
+        setNewNotifications(0);
+      }
     };
-  }, [socket]);
+  }, [
+    message.recievedBy,
+    message.sendedBy,
+    socket,
+    userState.activeChatId,
+    userState.isActiveChat,
+  ]);
 
   return (
     <main
-      onClick={() => router.push(`/home/chat/${name}`)}
+      onClick={() => router.push(`/home/${currentUser}/${direction}`)}
       className="flex gap-4 h-18 bg-terciary rounded-3xl relative p-4"
     >
-      <figure>Icon</figure>
       <article className="flex flex-col gap-2">
-        <p>{name}</p>
-        <p>{message.message}</p>
+        <p className="text-xl font-medium">{name}</p>
+        {/* <p>{lastMessage}</p> */}
       </article>
-      <aside className="absolute top-3 right-5">{newNotifications}</aside>
+      <aside
+        className={`text-xl font-medium absolute top-3 right-5 ${
+          newNotifications === 0 ? "sr-only" : ""
+        }`}
+      >
+        {newNotifications}
+      </aside>
     </main>
   );
 };

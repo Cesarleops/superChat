@@ -1,10 +1,13 @@
 
-export interface ILogin {
-    userName: string;
+export interface Login {
+    password: string;
     email: string;
   }
-  export interface ISignUp extends ILogin{
+  export interface SignUp{
+    userName: string;
+    email: string;
     password: string;
+    
   }
   
   export interface IFriend {
@@ -19,4 +22,9 @@ export interface ILogin {
     userMenu: boolean
     isActiveChat?: boolean
     activeChatId?: string
+  }
+
+  export interface SearchedUser{
+    userName: string
+    id: string
   }

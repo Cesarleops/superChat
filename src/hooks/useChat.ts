@@ -1,8 +1,9 @@
+'use client'
 import { useUserContext } from "@/context/store";
 import axios from "axios";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
+
 
 export interface IMessagesInterface {
     sendedBy?: string;
@@ -12,24 +13,27 @@ export interface IMessagesInterface {
   }
 
 
-  
+ 
+  const SEND_MESSAGE_EVENT = "sendingMessage";
+  const CLEAN_EVENT = "clean";
+  const INCOMING_MESSAGE_EVENT = "incomingMessage"; 
 
 export const useChat = (params: Params) => {
-
+  
   const { userState, socket, setActiveChat, setActiveChatId } =
     useUserContext();
+    console.log(userState.activeChatId)
   const [messages, setMessages] = useState<Array<IMessagesInterface>>([]);
   const [newMessage, setNewMessage] = useState("");
   const [incomingMessage, setIncomingMessage] = useState<IMessagesInterface | null>(null);
 
-  const SEND_MESSAGE_EVENT = "sendingMessage";
-  const CLEAN_EVENT = "clean";
-  const INCOMING_MESSAGE_EVENT = "incomingMessage";
-
-  const handleNewMessage = async (message: any) => {
+  const id = localStorage.getItem('iden')
+ 
+  const handleNewMessage = async (e: React.FormEvent, message: any) => {
+    e.preventDefault()
     try {
       socket?.emit(SEND_MESSAGE_EVENT, {
-        sendedBy: userState.id,
+        sendedBy: userState.id ? userState.id : id,
         recievedBy: params.id,
         message,
       });
@@ -40,7 +44,7 @@ export const useChat = (params: Params) => {
       ]);
 
       await axios.post("http://localhost:8000/api/users/conversation", {
-        sendedBy: userState.id,
+        sendedBy: userState.id ? userState.id : id,
         recievedBy: params.id,
         message,
       });
@@ -49,12 +53,12 @@ export const useChat = (params: Params) => {
       console.log("Something went wrong:", error);
     }
   };
-
   useEffect(() => {
     const initialConversation = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:8000/api/users/conversation?memberId1=${userState.id}&memberId2=${params.id}`
+          `http://localhost:8000/api/users/conversation?memberId1=${userState.id ? userState.id : id}&memberId2=${params.id}`
+        
         );
         setMessages(data);
       } catch (error) {
@@ -63,7 +67,7 @@ export const useChat = (params: Params) => {
     };
 
     initialConversation();
-  }, [userState.id, params.id]);
+  }, [userState.id, params.id, id]);
 
   useEffect(() => {
     setActiveChat(true);
@@ -78,30 +82,36 @@ export const useChat = (params: Params) => {
 
   useEffect(() => {
     socket?.emit(CLEAN_EVENT, {
-      sendedBy: userState.id,
+      sendedBy: userState.id ? userState.id : id,
       recievedBy: params.id,
     });
     return () => {
       socket?.emit(CLEAN_EVENT, {
-        sendedBy: userState.id,
+        sendedBy: userState.id ? userState.id : id,
         recievedBy: params.id,
       });
+    
     };
-  }, [userState.id, params.id, socket]);
+  }, [userState.id, params.id, socket, id]);
 
   useEffect(() => {
-    if (incomingMessage) {
+    if (incomingMessage ) {
       setMessages((prevMessages) => [...prevMessages, incomingMessage]);
     }
-  }, [incomingMessage]);
+  }, [incomingMessage, params.id, userState.activeChatId]);
 
   useEffect(() => {
-    const handleIncomingMessage = (data: string) => {
+    const handleIncomingMessage = (data: { message: string, sendedBy:string}) => {
+
+      console.log(userState.activeChatId)
       console.log(data);
-      setIncomingMessage({
-        ownMessage: false,
-        message: data,
-      });
+      if(userState.activeChatId === data.sendedBy){
+        setIncomingMessage({
+          ownMessage: false,
+          message: data.message,
+        });
+      }
+     
     };
 
     socket?.on(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
@@ -109,7 +119,7 @@ export const useChat = (params: Params) => {
     return () => {
       socket?.off(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
     };
-  }, [socket]);
+  }, [socket, userState.activeChatId]);
 
   return {
      messages,

@@ -2,22 +2,17 @@
 import InputComponent from "@/components/atoms/InputComponent";
 import { useUserContext } from "@/context/store";
 import useForm from "@/hooks/useForm";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const initialForm = {
   email: "",
   password: "",
 };
 const Login = () => {
-  const { login, userState } = useUserContext();
-  const { form, handleChange } = useForm(initialForm);
-  const handleSubmit = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    login(form);
-  };
+  const { userState } = useUserContext();
+  const { handleChange, handleSubmit, errors } = useForm(initialForm);
   const router = useRouter();
   useEffect(() => {
     if (userState.loged === "authenticated") {
@@ -29,8 +24,10 @@ const Login = () => {
   return (
     <main className="w-screen h-screen bg-white flex flex-col items-center gap-8">
       <hgroup className="pt-44 flex flex-col items-center ">
-        <h1 className="text-3xl text-terciary">Welcome Back</h1>
-        <h6 className="text-lg text-terciary">Login to your account</h6>
+        <h1 className="text-3xl text-terciary font-bold ">Welcome Back</h1>
+        <h6 className="text-lg text-terciary font-medium">
+          Login to your account
+        </h6>
       </hgroup>
 
       <section className="flex flex-col gap-4">
@@ -41,32 +38,41 @@ const Login = () => {
             name="email"
             text="Email"
           />
+
           <InputComponent
             type="password"
             onChange={handleChange}
             name="password"
             text="Password"
           />
-        </form>
-
-        <article className="flex gap-4">
-          <article>
-            <label htmlFor="remember">Remember me </label>
-            <input id="remember" type="checkbox" />
+          {errors.login && (
+            <p className="text-red-600 text-center mt-3">{errors.login}</p>
+          )}
+          <article className="flex gap-4 mt-5">
+            <article>
+              <label htmlFor="remember" className="font-normal">
+                Remember me{" "}
+              </label>
+              <input id="remember" type="checkbox" />
+            </article>
+            <p className="font-normal">Forgot Password ?</p>
           </article>
-          <p>Forgot Password ?</p>
-        </article>
-      </section>
-      <section className="w-3/5  flex flex-col items-center">
-        <button
-          className="w-3/5 h-12 bg-gradient-to-r from-primary to-terciary text-white rounded-full"
-          onClick={handleSubmit}
-        >
-          Continue
-        </button>
-        <p>
-          Already have an account? <Link href={"/signUp"}>Sign Up</Link>
-        </p>
+          <section className="flex flex-col items-center mt-5">
+            <button
+              type="submit"
+              className="w-3/5 h-12 bg-gradient-to-r from-primary to-terciary text-white rounded-full font-semibold mb-4"
+              onClick={(e) => handleSubmit(e, "login")}
+            >
+              Continue
+            </button>
+            <p className="font-normal">
+              Already have an account?{" "}
+              <Link href={"/signUp"} className="text-terciary">
+                Sign Up
+              </Link>
+            </p>
+          </section>
+        </form>
       </section>
     </main>
   );

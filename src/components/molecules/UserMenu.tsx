@@ -1,10 +1,13 @@
 "use client";
-import { BsDoorOpen } from "react-icons/bs";
+import SignOutButton from "../atoms/signOutButton";
 import { useUserContext } from "@/context/store";
 import { useRouter } from "next/navigation";
 
-export const UserMenu = () => {
-  const { userState, socket, logout } = useUserContext();
+interface Props {
+  userName: string;
+}
+export const UserMenu = ({ userName }: Props) => {
+  const { userState, setMenu } = useUserContext();
   const router = useRouter();
   return (
     <main
@@ -16,25 +19,25 @@ export const UserMenu = () => {
     >
       {userState.userMenu ? (
         <section className="w-screen h-full p-10 transition-all duration-100">
-          <section className="flex gap-5 w-full h-11 items-center">
-            <figure className="h-20 w-20 flex items-center justify-center bg-blue-700 rounded-full">
+          <section className="flex gap-5 w-full h-11 items-center justify-start">
+            <figure className="h-20 w-20 flex items-center justify-center bg-secondary rounded-full">
               foto
             </figure>
-            <p>{userState.userName || "nombre"} </p>
+            <p className="text-3xl text-secondary">{userName}</p>
           </section>
-          <section className="flex gap-3 pt-10 items-center ">
-            <BsDoorOpen className="h-8 w-8 text-red-700" />
-            <p
-              onClick={() => {
-                socket?.emit("logout", userState.id);
-                logout();
-                router.push("/");
-                socket?.disconnect();
-              }}
-              className="text-lg"
-            >
-              Sign out
-            </p>
+          <section className="flex flex-col justify-start items-start ">
+            <article className="bg-secondary mt-10 mb-5 rounded-xl">
+              <button
+                className="p-1 m-0  text-terciary text-lg"
+                onClick={() => {
+                  setMenu();
+                  router.push(`home/${userName}/requests`);
+                }}
+              >
+                Frienquests
+              </button>
+            </article>
+            <SignOutButton />
           </section>
         </section>
       ) : null}

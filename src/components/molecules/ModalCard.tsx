@@ -8,7 +8,7 @@ export const ModalCard = () => {
   return (
     <section>
       <BsArrowRight
-        className="w-10 h-10 p-3 bg-terciary text-5xl text-bold text-secondary rounded-full"
+        className="w-[50px] h-[50px] p-3 bg-terciary text-5xl font-bold text-secondary rounded-full"
         onClick={() => setShowingModal(!showingModal)}
       />
       {showingModal && (
