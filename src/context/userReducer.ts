@@ -6,7 +6,8 @@ type Action = |
  {type: 'ACTIVATE_CHAT', payload:boolean} |
  {type: 'SET_CHAT', payload:string} |
  {type: 'TOGGLE'} |
- {type: 'LOGOUT'} 
+ {type: 'LOGOUT'} |
+ {type: 'IMAGE' , payload:string}
 
 
 
@@ -21,12 +22,13 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
                 id: action.payload.id
             }
         case 'LOGIN': {
-
+            
             return {
                 ...state,
                 userName: action.payload.username,
                 loged: 'authenticated',
-                id: action.payload.id
+                id: action.payload.id,
+                profilePic: action.payload.pic
             }
         }
         
@@ -46,6 +48,12 @@ export const userReducer = (state: IUserState, action: Action): IUserState => {
         return {
             ...state,
             activeChatId: action.payload
+        }
+       }
+       case 'IMAGE':{
+        return {
+            ...state,
+            
         }
        }
        case 'LOGOUT': {

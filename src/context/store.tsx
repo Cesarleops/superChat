@@ -11,11 +11,12 @@ import { userReducer } from "./userReducer";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { SignUp, Login, IUserState } from "@/interfaces";
-import { rejects } from "assert";
+
 axios.defaults.withCredentials = true;
 const initialState: IUserState = {
   userName: "",
   loged: "not-authenticated",
+  profilePic: "",
   id: "",
   userMenu: false,
   isActiveChat: false,
@@ -31,6 +32,7 @@ interface UserContextProps {
   setActiveChatId: (name: string) => void;
   socket: Socket | null;
   logout(): void;
+  setProfilePic(payload: string): void;
 }
 
 export const UserContext = createContext<UserContextProps>(
@@ -82,7 +84,11 @@ export const UserProvider = ({ children }: any) => {
       localStorage.setItem("authenticated", "true");
       dispatch({
         type: "LOGIN",
-        payload: { username: data.user.userName, id: data.user._id },
+        payload: {
+          username: data.user.userName,
+          id: data.user._id,
+          pic: data.user.profilePic,
+        },
       });
     } catch (error) {
       throw "User or Email are incorrect";
@@ -109,6 +115,13 @@ export const UserProvider = ({ children }: any) => {
     });
   };
 
+  const setProfilePic = (payload: string) => {
+    dispatch({
+      type: "IMAGE",
+      payload,
+    });
+  };
+
   const logout = () => {
     localStorage.clear();
 
@@ -120,6 +133,7 @@ export const UserProvider = ({ children }: any) => {
   return (
     <UserContext.Provider
       value={{
+        setProfilePic,
         userState,
         login,
         signUp,

@@ -21,6 +21,7 @@ export interface Login {
     loged: string;
     userMenu: boolean
     isActiveChat?: boolean
+    profilePic?:string
     activeChatId?: string
   }
 
