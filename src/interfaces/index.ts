@@ -2,11 +2,13 @@
 export interface Login {
     password: string;
     email: string;
+    [index: string]: string | undefined ;
   }
-  export interface SignUp{
-    userName: string;
+  export interface Sign{
+    userName?: string;
     email: string;
     password: string;
+    [index: string]: string | undefined ;
     
   }
   

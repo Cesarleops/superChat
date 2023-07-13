@@ -6,15 +6,18 @@ interface Props {
 }
 
 const fetchFriends = async (user: string) => {
-  const data = await fetch(`http://localhost:8000/api/users/friends/${user}`, {
-    cache: "no-store",
-  });
+  const data = await fetch(
+    `https://mychat-back.onrender.com/api/users/friends/${user}`,
+    {
+      cache: "no-store",
+    }
+  );
   const res = await data.json();
   return res;
 };
 export const FriendsSection = async ({ user }: Props) => {
   const data = await fetchFriends(user);
-  console.log("los amigos", data);
+
   return (
     <main className="flex items-center gap-3  pl-2 pb-3 ">
       {data ? (

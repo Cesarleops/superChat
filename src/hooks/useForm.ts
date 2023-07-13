@@ -1,6 +1,6 @@
 import {z} from 'zod'
 import { useState } from "react"
-import { Login, SignUp } from '@/interfaces';
+
 import { useUserContext } from '@/context/store';
 
 
@@ -21,13 +21,9 @@ type Errors = {
     password?:string
     login?:string
 }
- type Form = {
-    signUp?: SignUp
-    login?:Login
-    [index:string]: string | SignUp | Login | undefined
- }
 
-const useForm = (initialForm: Form) => {
+
+const useForm = (initialForm: {userName?: string , email: string, password: string, [index:string]: string | undefined } ) => {
   const { login } = useUserContext();
     const [form, setForm] = useState(initialForm)
     const [errors,setErrors] = useState<Errors>({})
@@ -60,7 +56,7 @@ const useForm = (initialForm: Form) => {
       e.preventDefault()
       if(type === 'login'){
          login(form).then(() => {
-     
+       
         })
         .catch((error:string) => {
           setErrors({...errors,

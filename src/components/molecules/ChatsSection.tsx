@@ -15,13 +15,12 @@ type User = {
   user: string;
 };
 const getChats = async (user: string) => {
-  console.log("el usuario al que le traigo", user);
   const chats = await fetch(
-    `http://localhost:8000/api/users/conversation/${user}`,
+    `https://mychat-back.onrender.com/api/users/conversation/${user}`,
     { cache: "no-store" }
   );
   const chats2 = await chats.json();
-  console.log("los chats", chats2);
+
   return chats2;
 };
 

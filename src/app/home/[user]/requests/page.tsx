@@ -5,12 +5,16 @@ import Link from "next/link";
 import { BiLeftArrowAlt } from "react-icons/bi";
 const getRequests = async (user: string) => {
   const { data } = await axios.get(
-    `http://localhost:8000/api/users/friends/requests/${user}`
+    `https://mychat-back.onrender.com/api/users/friends/requests/${user}`
   );
 
   return data;
 };
-const FriendRequest = async ({ params }: Params) => {
+const FriendRequest = async ({
+  params,
+}: {
+  params: { id: string; user: string };
+}) => {
   const data = await getRequests(params.user);
 
   return (

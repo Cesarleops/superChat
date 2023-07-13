@@ -1,10 +1,12 @@
 import { useState } from "react";
 
 export const useCloudinary = () => {
-    const [image, setImage] = useState([]);
-    const handleImage = (e: React.ChangeEvent) => {
-        const file = e.target.files[0];
-        setFileToBase(file);
+    const [image, setImage] = useState<string | ArrayBuffer | null>(null);
+    const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        const file = e.target.files?.[0]
+        if(file) setFileToBase(file);
+        
       };
     
       const setFileToBase = (file: Blob) => {

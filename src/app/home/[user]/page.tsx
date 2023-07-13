@@ -2,9 +2,12 @@ import ToogleSwitch from "@/components/molecules/ToogleSwitch";
 import { UserMenu } from "@/components/molecules/UserMenu";
 import { ChatsSection } from "@/components/molecules/ChatsSection";
 import { HomeHeader } from "@/components/molecules/HomeHeader";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
-export default function Home({ params }: Params) {
+export default function Home({
+  params,
+}: {
+  params: { id: string; user: string };
+}) {
   return (
     <main className="h-screen">
       <UserMenu userName={params.user} />

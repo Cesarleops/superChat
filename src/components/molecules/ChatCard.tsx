@@ -46,7 +46,6 @@ const ChatCard = ({
         userState.activeChatId === message.recievedBy ||
         userState.activeChatId === message.sendedBy
       ) {
-        console.log("voy a limpiar las notificaciones de este chat");
         setNewNotifications(0);
       }
     };

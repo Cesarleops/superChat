@@ -15,16 +15,16 @@ export const UserMenu = ({ userName }: Props) => {
   const handlePhoto = async () => {
     if (typeof image === "string") {
       const { data } = await axios.put(
-        `http://localhost:8000/api/users/${userState.id}`,
+        `https://mychat-back.onrender.com/api/users/${userState.id}`,
         { image }
       );
-      console.log("cambio de imagen", data);
+
       setProfilePic(data);
     }
     setPhoto(!photo);
   };
   const [photo, setPhoto] = useState(false);
-  console.log("mi foto", userState.profilePic);
+
   const router = useRouter();
   return (
     <main

@@ -11,7 +11,7 @@ const SignOutButton = () => {
     if (socket?.connected) {
       socket?.emit("logout", userState.id);
     }
-    await fetch("http://localhost:8000/api/users/logout", {
+    await fetch("https://mychat-back.onrender.com/api/users/logout", {
       method: "post",
       body: "",
       credentials: "include",

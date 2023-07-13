@@ -15,7 +15,7 @@ export const useSearch = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await axios.get(
-        `http://localhost:8000/api/users?name=${input}&id=${userState.id}`
+        `https://mychat-back.onrender.com/api/users?name=${input}&id=${userState.id}`
       );
       console.log(data)
       const newData = data.filter((u:SearchedUser) => u.userName !== userState.userName)

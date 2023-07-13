@@ -10,14 +10,14 @@ type Props = {
 
 const getUser = async (id: any) => {
   const { data } = await axios.get(
-    `http://localhost:8000/api/users/obtain/${id}`
+    `https://mychat-back.onrender.com/api/users/obtain/${id}`
   );
 
   return data;
 };
 const ChatLayout = async ({ children, params }: Props) => {
   const chatUser = await getUser(params.id);
-  console.log(chatUser);
+
   const name =
     chatUser.userName.slice(0, 1).toUpperCase() + chatUser.userName.slice(1);
   return (

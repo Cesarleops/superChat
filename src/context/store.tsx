@@ -10,7 +10,7 @@ import { Socket } from "socket.io-client";
 import { userReducer } from "./userReducer";
 import axios from "axios";
 import { io } from "socket.io-client";
-import { SignUp, Login, IUserState } from "@/interfaces";
+import { Sign, Login, IUserState } from "@/interfaces";
 
 axios.defaults.withCredentials = true;
 const initialState: IUserState = {
@@ -26,8 +26,8 @@ const initialState: IUserState = {
 interface UserContextProps {
   userState: IUserState;
   socket: Socket | null;
-  login: (form: Login) => void;
-  signUp: (form: SignUp) => void;
+  login: (form: Login) => Promise<void>;
+  signUp: (form: Sign) => void;
   setMenu: () => void;
   setActiveChat: (value: boolean) => void;
   setActiveChatId: (name: string) => void;
@@ -43,7 +43,9 @@ export const UserProvider = ({ children }: any) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   const getMyUser = async () => {
-    const { data } = await axios.get(`http://localhost:8000/api/users/myuser`);
+    const { data } = await axios.get(
+      `https://mychat-back.onrender.com/api/users/myuser`
+    );
     loadUser(data);
   };
 
@@ -52,7 +54,7 @@ export const UserProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (userState.id) {
-      const newSocket = io("http://localhost:8000", {
+      const newSocket = io("https://mychat-back.onrender.com", {
         query: { socketId: storedSocketId },
       });
 
@@ -84,8 +86,11 @@ export const UserProvider = ({ children }: any) => {
     });
   };
 
-  const signUp = async (form: SignUp) => {
-    const { data } = await axios.post("http://localhost:8000/api/users", form);
+  const signUp = async (form: Sign) => {
+    const { data } = await axios.post(
+      "https://mychat-back.onrender.com/api/users",
+      form
+    );
     localStorage.setItem("loged", "true");
     console.log(data);
     dispatch({
@@ -96,7 +101,10 @@ export const UserProvider = ({ children }: any) => {
 
   const login = async (form: Login): Promise<void> => {
     try {
-      const { data } = await axios.post("http://localhost:8000/api/auth", form);
+      const { data } = await axios.post(
+        "https://mychat-back.onrender.com/api/auth",
+        form
+      );
 
       localStorage.setItem("loged", "true");
       dispatch({

@@ -2,11 +2,12 @@
 import InputComponent from "@/components/atoms/InputComponent";
 import { useUserContext } from "@/context/store";
 import useForm from "@/hooks/useForm";
+import { Login } from "@/interfaces";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const initialForm = {
+const initialForm: Login = {
   email: "",
   password: "",
 };

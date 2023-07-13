@@ -8,9 +8,7 @@ const AddFriend = ({ from, uid }: { from: string; uid: string }) => {
   const acceptFriend = async (uid: string, username: string) => {
     setSended(true);
     await axios.post(
-      `http://localhost:8000/api/users/friends/${
-        userState.id
-      }`,
+      `https://mychat-back.onrender.com/api/users/friends/${userState.id}`,
       {
         uid,
         username,

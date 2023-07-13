@@ -8,7 +8,7 @@ interface Props {
   params?: string;
 }
 const FriendCard = ({ profilePic, name, id, params }: Props) => {
-  console.log("parece que esto es undefined", profilePic);
+
   return (
     <main className="flex gap-2 w-32 h-20 bg-terciary rounded-3xl relative p-2">
       <picture className="bg-white rounded-full h-10 w-10 text-center align-middle">
