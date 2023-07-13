@@ -108,7 +108,8 @@ export const UserProvider = ({ children }: any) => {
     try {
       const { data } = await axios.post(
         "https://mychat-back.onrender.com/api/auth",
-        form
+        form,
+        { withCredentials: true }
       );
 
       localStorage.setItem("loged", "true");
