@@ -12,6 +12,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import { Sign, Login, IUserState } from "@/interfaces";
 
+axios.defaults.withCredentials = true;
 const initialState: IUserState = {
   userName: "",
   loged: "not-authenticated",
@@ -43,10 +44,7 @@ export const UserProvider = ({ children }: any) => {
 
   const getMyUser = async () => {
     const { data } = await axios.get(
-      `https://mychat-back.onrender.com/api/users/myuser`,
-      {
-        withCredentials: true,
-      }
+      `https://mychat-back.onrender.com/api/users/myuser`
     );
     loadUser(data);
   };
@@ -91,10 +89,7 @@ export const UserProvider = ({ children }: any) => {
   const signUp = async (form: Sign) => {
     const { data } = await axios.post(
       "https://mychat-back.onrender.com/api/users",
-      form,
-      {
-        withCredentials: true,
-      }
+      form
     );
     localStorage.setItem("loged", "true");
     console.log(data);
@@ -108,8 +103,7 @@ export const UserProvider = ({ children }: any) => {
     try {
       const { data } = await axios.post(
         "https://mychat-back.onrender.com/api/auth",
-        form,
-        { withCredentials: true }
+        form
       );
 
       localStorage.setItem("loged", "true");
