@@ -12,8 +12,6 @@ export interface IMessagesInterface {
     ownMessage?: boolean;
   }
 
-
- 
   const SEND_MESSAGE_EVENT = "sendingMessage";
   const CLEAN_EVENT = "clean";
   const INCOMING_MESSAGE_EVENT = "incomingMessage"; 
@@ -22,42 +20,16 @@ export const useChat = (params: Params) => {
   
   const { userState, socket, setActiveChat, setActiveChatId } =
     useUserContext();
-    console.log(userState.activeChatId)
+
   const [messages, setMessages] = useState<Array<IMessagesInterface>>([]);
   const [newMessage, setNewMessage] = useState("");
   const [incomingMessage, setIncomingMessage] = useState<IMessagesInterface | null>(null);
-
-  const id = localStorage.getItem('iden')
- 
-  const handleNewMessage = async (e: React.FormEvent, message: any) => {
-    e.preventDefault()
-    try {
-      socket?.emit(SEND_MESSAGE_EVENT, {
-        sendedBy: userState.id ? userState.id : id,
-        recievedBy: params.id,
-        message,
-      });
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { ownMessage: true, message },
-      ]);
-
-      await axios.post("http://localhost:8000/api/users/conversation", {
-        sendedBy: userState.id ? userState.id : id,
-        recievedBy: params.id,
-        message,
-      });
-      setNewMessage('')
-    } catch (error) {
-      console.log("Something went wrong:", error);
-    }
-  };
+  
   useEffect(() => {
     const initialConversation = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:8000/api/users/conversation?memberId1=${userState.id ? userState.id : id}&memberId2=${params.id}`
+          `http://localhost:8000/api/users/conversation?memberId1=${userState.id}&memberId2=${params.id}`
         
         );
         setMessages(data);
@@ -67,7 +39,34 @@ export const useChat = (params: Params) => {
     };
 
     initialConversation();
-  }, [userState.id, params.id, id]);
+  }, [userState.id, params.id]);
+  const handleNewMessage = async (e: React.FormEvent, message: any) => {
+    e.preventDefault()
+    try {
+  
+      
+        socket?.emit(SEND_MESSAGE_EVENT, {
+          sendedBy: userState.id ,
+          recievedBy: params.id,
+          message,
+        });      
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ownMessage: true, message },
+      ]);
+
+      await axios.post("http://localhost:8000/api/users/conversation", {
+        sendedBy: userState.id ,
+        recievedBy: params.id,
+        message,
+      });
+      setNewMessage('')
+    } catch (error) {
+      console.log("Something went wrong:", error);
+    }
+  };
+ 
 
   useEffect(() => {
     setActiveChat(true);
@@ -81,43 +80,52 @@ export const useChat = (params: Params) => {
   }, []);
 
   useEffect(() => {
-    socket?.emit(CLEAN_EVENT, {
-      sendedBy: userState.id ? userState.id : id,
-      recievedBy: params.id,
-    });
+   
+      socket?.emit(CLEAN_EVENT, {
+        sendedBy: userState.id,
+        recievedBy: params.id,
+      });
+    
+   
     return () => {
       socket?.emit(CLEAN_EVENT, {
-        sendedBy: userState.id ? userState.id : id,
+        sendedBy: userState.id,
         recievedBy: params.id,
       });
     
     };
-  }, [userState.id, params.id, socket, id]);
+  }, [userState.id, params.id, socket]);
 
   useEffect(() => {
     if (incomingMessage ) {
+      console.log('hago esto')
       setMessages((prevMessages) => [...prevMessages, incomingMessage]);
     }
   }, [incomingMessage, params.id, userState.activeChatId]);
 
   useEffect(() => {
+    console.log('se ejecuta')
     const handleIncomingMessage = (data: { message: string, sendedBy:string}) => {
-
-      console.log(userState.activeChatId)
-      console.log(data);
-      if(userState.activeChatId === data.sendedBy){
+    
+      console.log('el mensaje que viene',data);
+      if (userState.activeChatId === data.sendedBy) {
+        console.log('cambio el nuevo mensaje')
         setIncomingMessage({
           ownMessage: false,
           message: data.message,
         });
+        
       }
-     
     };
 
-    socket?.on(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
-
+      socket?.on(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
+    
+    
+  
     return () => {
-      socket?.off(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
+    
+        socket?.off(INCOMING_MESSAGE_EVENT, handleIncomingMessage);
+      
     };
   }, [socket, userState.activeChatId]);
 

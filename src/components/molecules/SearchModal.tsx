@@ -2,6 +2,7 @@
 import { BsArrowLeft } from "react-icons/bs";
 import { useSearch } from "@/hooks/useSearch";
 import { useUserContext } from "@/context/store";
+import { useState } from "react";
 
 type IUser = {
   id: string;
@@ -13,12 +14,14 @@ interface Props {
 export const SearchModal = ({ onClick }: Props) => {
   const { data, handleChange, input } = useSearch();
   const { userState, socket } = useUserContext();
-  const userId = localStorage.getItem("iden");
-
+  const [sended, setSended] = useState(false);
   return (
     <main className="absolute w-screen h-screen bg-white z-50 top-0 left-0">
       <section className="flex p-5 items-center gap-5">
-        <BsArrowLeft onClick={() => onClick()} className="h-8 w-8" />
+        <BsArrowLeft
+          onClick={() => onClick()}
+          className="h-8 w-8  text-secondary"
+        />
         <input
           type="text"
           name="search"
@@ -32,18 +35,20 @@ export const SearchModal = ({ onClick }: Props) => {
         <article className="flex flex-col gap-2">
           {data.map((el: IUser) => (
             <article className="flex items-center gap-10" key={el.id}>
-              <p className="text-2xl mr-auto">{el.userName}</p>
-              <small
-                className="bg-terciary text-base text-center p-2 rounded-xl"
+              <p className="text-2xl text-secondary mr-auto">{el.userName}</p>
+              <button
+                disabled={sended}
+                className="bg-terciary text-base text-center text-secondary p-2 rounded-xl"
                 onClick={() => {
                   socket?.emit("addFriend", {
                     id: el.id,
-                    from: userState.id ? userState.id : userId,
+                    from: userState.id,
                   });
+                  setSended(true);
                 }}
               >
-                Connect!
-              </small>
+                {sended ? "Sended" : "Send"}
+              </button>
             </article>
           ))}
         </article>

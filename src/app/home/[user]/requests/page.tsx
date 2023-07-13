@@ -12,6 +12,7 @@ const getRequests = async (user: string) => {
 };
 const FriendRequest = async ({ params }: Params) => {
   const data = await getRequests(params.user);
+
   return (
     <main className="h-screen w-screen ">
       <header className="flex justify-start items-center h-10 bg-terciary pl-2 gap-20">

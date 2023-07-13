@@ -28,7 +28,8 @@ const ChatCard = ({
   const { socket, userState } = useUserContext();
 
   const direction =
-    currentUser !== message.sendedBy ? message.sendedBy : message.recievedBy;
+    userState.id !== message.sendedBy ? message.sendedBy : message.recievedBy;
+
   useEffect(() => {
     const handleNotis = (data: string) => {
       if (userState.activeChatId !== message.sendedBy) {
@@ -45,6 +46,7 @@ const ChatCard = ({
         userState.activeChatId === message.recievedBy ||
         userState.activeChatId === message.sendedBy
       ) {
+        console.log("voy a limpiar las notificaciones de este chat");
         setNewNotifications(0);
       }
     };
@@ -62,7 +64,7 @@ const ChatCard = ({
       className="flex gap-4 h-18 bg-terciary rounded-3xl relative p-4"
     >
       <article className="flex flex-col gap-2">
-        <p className="text-xl font-medium">{name}</p>
+        <p className="text-xl font-medium text-secondary">{name}</p>
         {/* <p>{lastMessage}</p> */}
       </article>
       <aside

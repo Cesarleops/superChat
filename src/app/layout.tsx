@@ -1,13 +1,13 @@
 import { UserProvider } from "@/context/store";
 import "./globals.css";
-import { Montserrat } from "next/font/google";
+import { Montserrat, Manrope } from "next/font/google";
 
 export const metadata = {
   title: "Sendy",
   description: "Cesar Leyton",
 };
 
-const mainFont = Montserrat({ subsets: ["latin"] });
+const mainFont = Manrope({ subsets: ["latin"] });
 export default function RootLayout({
   children,
 }: {

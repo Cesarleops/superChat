@@ -40,8 +40,8 @@ export const ChatBody = ({ params }: Props) => {
             <div
               className={` w-fit h-auto p-2 rounded-md ${
                 m.ownMessage
-                  ? "self-start bg-primary text-secondary"
-                  : "self-end bg-terciary"
+                  ? "self-start bg-secondary text-white"
+                  : "self-end bg-terciary text-secondary"
               }`}
               key={i}
             >

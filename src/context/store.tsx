@@ -25,12 +25,12 @@ const initialState: IUserState = {
 
 interface UserContextProps {
   userState: IUserState;
+  socket: Socket | null;
   login: (form: Login) => void;
   signUp: (form: SignUp) => void;
   setMenu: () => void;
   setActiveChat: (value: boolean) => void;
   setActiveChatId: (name: string) => void;
-  socket: Socket | null;
   logout(): void;
   setProfilePic(payload: string): void;
 }
@@ -42,35 +42,52 @@ export const UserProvider = ({ children }: any) => {
   const [userState, dispatch] = useReducer(userReducer, initialState);
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  const connectSocket = () => {
-    const newSocket = io("http://localhost:8000");
-    setSocket(newSocket);
+  const getMyUser = async () => {
+    const { data } = await axios.get(`http://localhost:8000/api/users/myuser`);
+    loadUser(data);
   };
 
-  const authenticated =
-    typeof localStorage !== "undefined"
-      ? localStorage.getItem("authenticated")
-      : false;
+  const storedSocketId =
+    typeof window !== "undefined" ? localStorage.getItem("socketId") : false;
 
   useEffect(() => {
-    if (authenticated) {
-      connectSocket();
+    if (userState.id) {
+      const newSocket = io("http://localhost:8000", {
+        query: { socketId: storedSocketId },
+      });
+
+      setSocket(newSocket);
+      newSocket.on("connect", () => {
+        localStorage.setItem("socketId", newSocket.id);
+      });
     }
-  }, [authenticated]);
+  }, [storedSocketId, userState.id]);
 
   useEffect(() => {
-    if (socket) {
-      const id = localStorage.getItem("iden");
+    if (localStorage.getItem("loged")) {
+      getMyUser();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userState.id && socket !== null) {
       socket?.emit("loged", {
-        sendedBy: userState.id ? userState.id : id,
+        sendedBy: userState.id,
       });
     }
   }, [socket, userState.id]);
 
+  const loadUser = (payload: object) => {
+    dispatch({
+      type: "LOAD",
+      payload,
+    });
+  };
+
   const signUp = async (form: SignUp) => {
     const { data } = await axios.post("http://localhost:8000/api/users", form);
-    localStorage.setItem("iden", data.newUser._id);
-    localStorage.setItem("authenticated", "true");
+    localStorage.setItem("loged", "true");
+    console.log(data);
     dispatch({
       type: "SIGN_UP",
       payload: { username: data.newUser.userName, id: data.newUser._id },
@@ -80,8 +97,8 @@ export const UserProvider = ({ children }: any) => {
   const login = async (form: Login): Promise<void> => {
     try {
       const { data } = await axios.post("http://localhost:8000/api/auth", form);
-      localStorage.setItem("iden", data.user._id);
-      localStorage.setItem("authenticated", "true");
+
+      localStorage.setItem("loged", "true");
       dispatch({
         type: "LOGIN",
         payload: {

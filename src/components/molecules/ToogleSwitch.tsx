@@ -8,7 +8,7 @@ const ToogleSwitch = () => {
   return (
     <label
       htmlFor="toggle"
-      className="bg-fourth relative w-4/5 h-4/5 rounded-full cursor-pointer"
+      className="bg-secondary relative w-4/5 h-4/5 rounded-full cursor-pointer"
     >
       <input
         onClick={() => setMenu()}

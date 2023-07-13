@@ -21,7 +21,7 @@ export const ChatFooter = ({
     socket?.emit("typing", whoImTalkingTo);
   };
   return (
-    <section className="fixed bottom-0 w-screen flex items-center bg-primary p-3">
+    <section className="fixed bottom-0 w-screen flex items-center bg-secondary p-3">
       <form className="h-9 flex items-center gap-10">
         <input
           type="text"
@@ -32,7 +32,7 @@ export const ChatFooter = ({
           onKeyDown={typing}
         />
         <button type="submit" onClick={(e) => handleNewMessage(e, newMessage)}>
-          <MdSend className="h-10 w-10  text-secondary" />
+          <MdSend className="h-10 w-10  text-white" />
         </button>
       </form>
     </section>

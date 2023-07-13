@@ -10,19 +10,19 @@ export const useSearch = () => {
   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
    setInput(e.currentTarget.value)
   }
-  const userId = localStorage.getItem("iden");
+ 
   
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await axios.get(
-        `http://localhost:8000/api/users?name=${input}&id=${userState.id ? userState.id : userId}`
+        `http://localhost:8000/api/users?name=${input}&id=${userState.id}`
       );
       console.log(data)
       const newData = data.filter((u:SearchedUser) => u.userName !== userState.userName)
       setData(newData);
     };
     fetchUsers();
-  }, [input, userId, userState.id, userState.userName]);
+  }, [input, userState.id, userState.userName]);
 
   return {
     data,

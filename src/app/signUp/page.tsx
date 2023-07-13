@@ -31,7 +31,7 @@ const SignUp = () => {
     }
   }, [userState.loged, router, userState.userName]);
   return (
-    <main className="w-screen h-screen bg-white  flex flex-col items-center pt-44 ">
+    <main className="w-screen h-screen bg-secondary flex flex-col items-center pt-44 ">
       <hgroup className="flex flex-col items-center">
         <h1 className="text-terciary text-3xl font-bold">Register</h1>
         <h5 className="text-terciary text-lg font-medium">
@@ -80,11 +80,11 @@ const SignUp = () => {
         <section className="flex flex-col items-center  pt-5  w-4/5 gap-5">
           <button
             type="submit"
-            className="w-4/5 h-12 font-semibold text-white rounded-full bg-gradient-to-r from-primary to-terciary"
+            className="w-4/5 h-12 font-semibold text-white rounded-full bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-terciary"
           >
             Continue
           </button>
-          <p>
+          <p className="text-white">
             Already have an account ?{" "}
             <Link className="text-terciary" href={"/"}>
               Log in

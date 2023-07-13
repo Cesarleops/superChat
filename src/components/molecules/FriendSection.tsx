@@ -6,7 +6,6 @@ interface Props {
 }
 
 const fetchFriends = async (user: string) => {
-  console.log("fetching friends");
   const data = await fetch(`http://localhost:8000/api/users/friends/${user}`, {
     cache: "no-store",
   });

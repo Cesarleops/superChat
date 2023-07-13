@@ -9,6 +9,7 @@ interface User {
   userName: string;
   id: string;
   key: string;
+  profilePic?: string;
 }
 export const FriendList = ({ data, params }: Props) => {
   return (
@@ -19,6 +20,7 @@ export const FriendList = ({ data, params }: Props) => {
           name={user.userName}
           id={user.id}
           params={params}
+          profilePic={user.profilePic}
         />
       ))}
     </section>

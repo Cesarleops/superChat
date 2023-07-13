@@ -6,9 +6,9 @@ interface Props {
 
 export const HomeHeader = ({ user }: Props) => {
   return (
-    <header className="bg-primary">
+    <header className="bg-secondary">
       <section className="flex flex-col h-52  p-3">
-        <h1 className="text-4xl font-bold text-secondary mb-6 mt-6 z-40">
+        <h1 className="text-4xl font-bold text-white mb-6 mt-6 z-40">
           My Friends
         </h1>
         <FriendsSection user={user} />

@@ -1,24 +1,29 @@
 "use client";
-import { BsDoorOpen } from "react-icons/bs";
+
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/context/store";
-
+import { BsDoorOpen } from "react-icons/bs";
 const SignOutButton = () => {
   const { userState, socket, logout } = useUserContext();
   const router = useRouter();
-  const id = localStorage.getItem("iden");
+
+  const handleLogout = async () => {
+    if (socket?.connected) {
+      socket?.emit("logout", userState.id);
+    }
+    await fetch("http://localhost:8000/api/users/logout", {
+      method: "post",
+      body: "",
+      credentials: "include",
+    });
+    logout();
+    router.push("/");
+  };
+
   return (
-    <article className="flex p-1 bg-secondary rounded-xl">
-      <button
-        onClick={() => {
-          socket?.emit("logout", userState.id ? userState.id : id);
-          logout();
-          router.push("/");
-          socket?.disconnect();
-        }}
-        className="text-lg text-terciary "
-      >
-        Sign out
+    <article className="flex p-1 bg-terciary h-[40px] w-[40px] rounded-xl">
+      <button onClick={handleLogout} className="text-lg text-red-500">
+        <BsDoorOpen className="h-[30px] w-[30px]" />
       </button>
     </article>
   );
